@@ -11,6 +11,7 @@ if (!uri) {
   console.log("Please provide MDB_URI");
   process.exit();
 }
+app.use(express.json());
 app.use(routes);
 
 mongoose.connect(uri).then(() => {
