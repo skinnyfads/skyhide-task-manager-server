@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import validObjectId from "../fns/validObjectId.js";
 import SubTask from "../models/SubTask.js";
 import Task from "../models/Task.js";
 
@@ -10,6 +11,9 @@ async function create(req: Request, res: Response) {
 
   if (!(title && taskId)) {
     return res.status(400).send({ message: "Some keys is missing" });
+  }
+  if (!validObjectId(taskId)) {
+    return res.status(400).send({ message: "Id is not valid" });
   }
   const exist = await Task.findOne({ _id: new ObjectId(taskId) });
 
@@ -28,6 +32,10 @@ async function create(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   const subTaskId = req.params.subTaskId;
+
+  if (!validObjectId(subTaskId)) {
+    return res.status(400).send({ message: "Id is not valid" });
+  }
   const exist = await SubTask.findOne({ _id: new ObjectId(subTaskId) });
 
   if (!exist) {
@@ -39,6 +47,10 @@ async function remove(req: Request, res: Response) {
 
 async function switchStatus(req: Request, res: Response) {
   const subTaskId = req.params.subTaskId;
+
+  if (!validObjectId(subTaskId)) {
+    return res.status(400).send({ message: "Id is not valid" });
+  }
   const exist = await SubTask.findOne({ _id: new ObjectId(subTaskId) });
 
   if (!exist) {

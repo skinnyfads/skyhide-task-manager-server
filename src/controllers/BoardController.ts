@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import validObjectId from "../fns/validObjectId.js";
 import Board from "../models/Board.js";
 import User from "../models/User.js";
 
@@ -28,6 +29,10 @@ async function create(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   const boardId = req.params.boardId;
+
+  if (!validObjectId(boardId)) {
+    return res.status(400).send({ message: "Id is not valid" });
+  }
   const exist = await Board.findOne({ _id: new ObjectId(boardId) });
 
   if (!exist) {
