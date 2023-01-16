@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import routes from "./routes/index.js";
+import log from "./middleware/log.js";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -12,6 +13,7 @@ if (!uri) {
   process.exit();
 }
 app.use(express.json());
+app.use(log);
 app.use(routes);
 
 mongoose.connect(uri).then(() => {
