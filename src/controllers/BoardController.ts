@@ -27,6 +27,24 @@ async function create(req: Request, res: Response) {
   return res.send(await newBoard.save());
 }
 
+async function getAllFromPublic(req: Request, res: Response) {
+  const boards = await Board.find({ private: false });
+  return res.send(boards);
+}
+
+async function getAllFromSpecificUser(req: Request, res: Response) {
+  const username = req.params.username;
+  const exist = await User.findOne({ username });
+
+  if (!exist) {
+    return res.status(404).send({ message: "User is not exist" });
+  }
+  const user = exist;
+  const boards = await Board.find({ userId: user._id });
+
+  return res.send(boards);
+}
+
 async function remove(req: Request, res: Response) {
   const boardId = req.params.boardId;
 
@@ -42,4 +60,4 @@ async function remove(req: Request, res: Response) {
   return res.send(await Board.deleteOne({ _id: board._id }));
 }
 
-export default { create, remove };
+export default { create, getAllFromPublic, getAllFromSpecificUser, remove };

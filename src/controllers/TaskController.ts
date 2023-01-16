@@ -31,6 +31,16 @@ async function create(req: Request, res: Response) {
   return res.send(await newTask.save());
 }
 
+async function getAll(req: Request, res: Response) {
+  const boardId = req.params.boardId;
+
+  if (!validObjectId(boardId)) {
+    return res.status(400).send({ message: "Id is not valid" });
+  }
+  const tasks = await Task.find({ boardId });
+  return res.send(tasks);
+}
+
 async function remove(req: Request, res: Response) {
   const taskId = req.params.taskId;
 
@@ -65,4 +75,4 @@ async function changeStatus(req: Request, res: Response) {
   return res.send(await Task.updateOne({ id: task._id }, { status }));
 }
 
-export default { create, remove, changeStatus };
+export default { create, getAll, remove, changeStatus };

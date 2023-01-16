@@ -30,6 +30,16 @@ async function create(req: Request, res: Response) {
   return res.send(await newSubTask.save());
 }
 
+async function getAll(req: Request, res: Response) {
+  const taskId = req.params.taskId;
+
+  if (!validObjectId(taskId)) {
+    return res.status(400).send({ message: "Id is not valid" });
+  }
+  const subTasks = await SubTask.find({ taskId });
+  return res.send(subTasks);
+}
+
 async function remove(req: Request, res: Response) {
   const subTaskId = req.params.subTaskId;
 
@@ -60,4 +70,4 @@ async function switchStatus(req: Request, res: Response) {
   return res.send(await SubTask.updateOne({ _id: subTask._id }, { done: !subTask.done }));
 }
 
-export default { create, remove, switchStatus };
+export default { create, getAll, remove, switchStatus };
